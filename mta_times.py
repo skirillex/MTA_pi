@@ -21,7 +21,7 @@ def get_traintime(data, station_id):
     for train_trip_id in data:
         if train_trip_id.get('trip_update'):
             train_schedule_update = train_trip_id["trip_update"]
-            train_id = train_trip_id["trip"] ##this gets the dictionary that holds the trip_id which has train in it
+            #train_id = train_trip_id["trip"] ##this gets the dictionary that holds the trip_id which has train in it
             arrival_times = train_schedule_update["stop_time_update"]
             for arrivals in arrival_times:
                 if arrivals.get("stop_id") == station_id:
