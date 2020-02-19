@@ -91,36 +91,3 @@ def print_trains(station_times, current_time, times_dict):
     return trains_list, times_list
 
 print(get_train("72nd North"))
-
-"""
-def debug():
-    train_first = int(((station_times[0] - current_time) / 60 ))
-    train_first_id = times_dict.get(station_times[0])
-
-    train_second = int(((station_times[1] - current_time) / 60 ))
-    train_second_id = times_dict.get(station_times[1])
-
-    train_arrives_at_station = int(((station_times[2] - current_time) / 60 ))
-    train_third_id = times_dict.get(station_times[2])
-
-    train_arrives_at_station_next = int(((station_times[3] - current_time) / 60 ))
-    train_fourth_id = times_dict.get(station_times[3])
-
-    print("CONTROL:  ________________________")
-    print("----------------------------")
-
-    print("first train in list")
-    print(f"{train_first_id} Train")
-    print(f"{train_first} Minutes")
-    print("second train in list")
-    print(f"{train_second_id} Train")
-    print(f"{train_second} Minutes")
-    print("----------------------------")
-    print("Train arrives at station:")
-    print(f"{train_third_id} Train")
-    print(train_arrives_at_station)
-
-    print("next train: ")
-    print(f"{train_fourth_id} Train")
-    print(train_arrives_at_station_next)
-    """
