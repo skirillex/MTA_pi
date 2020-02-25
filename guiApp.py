@@ -7,6 +7,8 @@ from kivy.uix.image import Image
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.clock import Clock
+from kivy.core.window import Window
+
 
 from datetime import datetime
 
@@ -135,4 +137,6 @@ class gui(App):
         return TrainGui()
 
 if __name__ == '__main__':
+    #Window.fullscreen = 'auto' # uncommend for fullscreen mode
+    #Window.show_cursor = False
     gui().run()

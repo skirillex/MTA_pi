@@ -62,10 +62,10 @@ def get_train(station):
     station_times.sort()
 
     # Debug
-    #print(str(times_dict))
+    print(str(times_dict))
     #print(route_id_list)
-
-    #print("current time")
+    #print(station_times)
+    print("current time")
     current_time = int(time.time()) # current epoch time to compare to trains (which are also in epoch time)
     #print(current_time)
     return print_trains(station_times, current_time, times_dict)
@@ -75,8 +75,11 @@ def print_trains(station_times, current_time, times_dict):
     print(times_dict)
     trains_list = []
     times_list = []
-    for i in range(0,5):
-        if (int(((station_times[i] - current_time) / 60 )) > -1):
+    n = 4
+    #for i in range(0,n):
+    i = 0
+    while i < n:
+        if int(((station_times[i] - current_time) / 60)) > -1:
             print("------------------------")
             print(f"{times_dict.get(station_times[i])} Train") # this prints the train ID with respect to the time it departs
             trains_list.append(times_dict.get(station_times[i]))
@@ -84,9 +87,12 @@ def print_trains(station_times, current_time, times_dict):
             print(f"{int(((station_times[i] - current_time) / 60 ))} Minutes") # this prints the train's departure time
             times_list.append(int(((station_times[i] - current_time) / 60 )))
             print("------------------------")
+        else:
+            n += 1
+        i += 1
 
-    #print(trains_list)
-    #print(times_list)
+    print(trains_list)
+    print(times_list)
     return trains_list, times_list
 # Debug
-#print(get_train("72nd North"))
+print(get_train("72nd South"))
