@@ -2,7 +2,14 @@
 
 This is a program, written in python, that reads the NYC MTA realtime feed API for subway data and displays that information graphically, utilizing the Kivy Python Framework.
 
+Kivy was chosen due to its portability amongst different operating systems without changing it's code.
+
 It was created as an exercise to learn and get familiar with APIs as well as learning a gui framework. While also being a very helpful tool for me when I'm getting ready to leave the apartment. This is the reason it is hardcoded to show data from a specific train station and trains.
+
+
+![Screenshot of program](https://raw.githubusercontent.com/skirillex/MTA_pi/master/screenshot_of_program.jpg?token=AHQWLHUUPJ7N7XKSUTMZGWC6LXLUM)
+
+![Running on Raspberry Pi](https://raw.githubusercontent.com/skirillex/MTA_pi/master/running_on_raspberry_pi.jpg?token=AHQWLHWW26ETN5Z3YM4QAR26LXLLU)
 
 # Requirements
 
