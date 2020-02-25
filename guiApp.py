@@ -1,53 +1,40 @@
 import kivy
 kivy.require('1.11.1')
 
-import random
-
 from kivy.app import App
 from kivy.uix.label import Label
 from kivy.uix.image import Image
-
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.textinput import TextInput
-from kivy.graphics import Color, Ellipse
-from kivy.uix.widget import Widget
-from kivy.uix.floatlayout import FloatLayout
 from kivy.clock import Clock
-from kivy.core.window import Window
+
+from datetime import datetime
 
 import mta_times
-
-red = [1,0,0,1]
-green = [0,1,0,1]
-blue =  [0,0,1,1]
-purple = [1,0,1,1]
-
-
-###need to figure out way for times to update
-
 
 class TrainGui(BoxLayout):
     def __init__(self,**kwargs):
         super(TrainGui, self).__init__(**kwargs)
+        self.count = 0
 
+        self.train_directions_flag = False
         self.dir_options = ["72nd North", "72nd South"]
 
         self.directions = self.dir_options[0]
 
-        self.colors = [red, green, blue, purple]
         self.trains_list, self.times_list, = self.get_trains()
 
-        #Debug:
-        print(self.times_list)
-        print(self.trains_list)
+        # Debug:
+        #print(self.times_list)
+        #print(self.trains_list)
 
         # create widgets to but into layouts:
         self.station_name = Label(text=f"[b]From 72nd St[/b]", markup=True, halign="left", font_size=40, size_hint=(.5, .5),
                              pos_hint={"center_x": .15, "center_y": .5})
-            # debugging button
-        self.btn = Button(text="Refresh", background_color=random.choice(self.colors), on_press=self.update)
-            # this below creates three lists of widgets
+        # debugging button
+        #self.btn = Button(text="Refresh", background_color=[1,0,1,1], on_press=self.update)
+
+        # this below creates three lists of widgets
         self.train_num, self.dire, self.time_label = self.train_dir_time_list()
 
         # add all widgets to layouts
@@ -60,14 +47,21 @@ class TrainGui(BoxLayout):
             h_layout.add_widget(self.time_label[i])
             self.add_widget(h_layout)
 
-        self.add_widget(self.btn)
-        Clock.schedule_interval(self.update, 10)
+        #self.add_widget(self.btn)
+        Clock.schedule_interval(self.update, 30) # creates a clock that calls update function every 30 secs
 
 
-
+    # this function is able to update the text and images in the widgets
     def update(self, event):
         new_train_num, new_dire, new_time_label = self.train_dir_time_list()
 
+        # this counter is for the afternoon where the screen needs to alternate between uptown/downtown
+        if self.count < 100:
+            self.count += 1
+        else:
+            self.count = 1
+
+        #updates the widget text and images to the new strings retrieved from train_dir_time_list()
         for i in range(0, len(new_train_num)):
             self.train_num[i].source = new_train_num[i].source
             self.dire[i].text = new_dire[i].text
@@ -77,17 +71,30 @@ class TrainGui(BoxLayout):
 
 
     def get_trains(self):
+        # this function runs the mta_times.py functions and returns their result
         return mta_times.get_train(self.directions)
 
     def train_dir_time_list(self):
-        #this method creates 3 lists in the same order to add to the main boxlayout
-        #a list of image objects, train_num / a list of direction label objects / a list of time label objects
+        # this function creates 3 lists in the same order to add to the main boxlayout
 
+
+        # this conditonal statement has uptown trains only showing in the morning, but alternate betweeen uptown and downtown trains in the afternoon
+        if 0 < int(str(datetime.now().time())[0:2]) <= 12:
+            self.directions = self.dir_options[0]
+        #else:
+            #self.directions = self.dir_options[1] # this makes it static downtown in the afternoon
+        elif self.count % 2 == 0:
+            self.directions = self.dir_options[0]
+        else:
+            self.directions = self.dir_options[1]
+
+        # a list of image objects, train_num / a list of direction label objects / a list of time label objects
         self.trains_list, self.times_list, = self.get_trains()
         train_num = []
         dir = []
         time_label = []
 
+        # the for loop below creates the widgets in the proper order and applies the proper labels and image
         for i in range(0, len(self.trains_list)):
 
             if self.directions == self.dir_options[0]:
@@ -100,7 +107,7 @@ class TrainGui(BoxLayout):
                               pos_hint={"center_x": .1, "center_y": .5})
                 dir.append(direction)
 
-            #conditional statements put the train image object into list
+            #conditional statements put the correct train number image object into list
             if self.trains_list[i] == '1':
                 img = Image(source = 'C:/Users/Kiril/PycharmProjects/MTA_pi/1_train.png', size_hint=(.7, .7), pos_hint={"center_x":.5, "center_y": .5})
                 train_num.append(img)

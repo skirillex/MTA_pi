@@ -4,23 +4,21 @@ import requests
 import time
 
 
-# headers={"x-api-key": "769b59cf365fb57f201e379116b64829"}
-
-api_key= "769b59cf365fb57f201e379116b64829"
-
+api_key= open("api_key").readline() # Imports API key from a file called api_key. key is given from the MTA dev site
 
 
 def get_train(station):
+    # pulls realtime feed from the MTA
     feed = gtfs_realtime_pb2.FeedMessage()
-    response = requests.get("http://datamine.mta.info/mta_esi.php?key=769b59cf365fb57f201e379116b64829")
-
-
+    response = requests.get(f"http://datamine.mta.info/mta_esi.php?key={api_key}")
     feed.ParseFromString(response.content)
 
-    subway_feed = protobuf_to_dict(feed) #is a dictionary
+    subway_feed = protobuf_to_dict(feed) # returns a dictionary (with nested lists and dictionaries) that the rest of the code works from
 
-    realtime_data = subway_feed['entity'] #is a list
+    realtime_data = subway_feed['entity'] # returns a list
+
     stations = {"72nd North" : "123N", "72nd South" : "123S", "66th South" : "124S"}
+
     station_times = []
     route_id_list = []
     times_dict = {}
@@ -47,15 +45,15 @@ def get_train(station):
                         if route_id != None:
                             route_id_list.append(route_id)
 
-    get_traintime(realtime_data,stations.get(station)) #default is "72nd North"
+    get_traintime(realtime_data,stations.get(station)) # default is "72nd North"
 
-    #this loop creates a dictionary with train times associated with train IDs (1, 2 or 3 train)
+    # this loop creates a dictionary with train times associated with train IDs (1, 2 or 3 train)
     for i in station_times:
-        #debug
+        # Debug
         #print(i)
         for k in route_id_list:
             times_dict[i] = k
-            #Debug
+            # Debug
             #print(k)
             route_id_list.remove(k)
             break
@@ -63,15 +61,16 @@ def get_train(station):
 
     station_times.sort()
 
-    #Debug
+    # Debug
     #print(str(times_dict))
     #print(route_id_list)
 
-    print("current time")
-    current_time = int(time.time())
-    print(current_time)
+    #print("current time")
+    current_time = int(time.time()) # current epoch time to compare to trains (which are also in epoch time)
+    #print(current_time)
     return print_trains(station_times, current_time, times_dict)
 
+# prints train information in terminal while also returning lists for the gui logic
 def print_trains(station_times, current_time, times_dict):
     print(times_dict)
     trains_list = []
@@ -79,15 +78,15 @@ def print_trains(station_times, current_time, times_dict):
     for i in range(0,5):
         if (int(((station_times[i] - current_time) / 60 )) > -1):
             print("------------------------")
-            print(f"{times_dict.get(station_times[i])} Train") #this prints the train ID with respect to the time it departs
+            print(f"{times_dict.get(station_times[i])} Train") # this prints the train ID with respect to the time it departs
             trains_list.append(times_dict.get(station_times[i]))
             print(" ")
-            print(f"{int(((station_times[i] - current_time) / 60 ))} Minutes") #this prints the train's departure time
+            print(f"{int(((station_times[i] - current_time) / 60 ))} Minutes") # this prints the train's departure time
             times_list.append(int(((station_times[i] - current_time) / 60 )))
             print("------------------------")
 
     #print(trains_list)
     #print(times_list)
     return trains_list, times_list
-
-print(get_train("72nd North"))
+# Debug
+#print(get_train("72nd North"))
