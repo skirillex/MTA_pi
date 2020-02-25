@@ -33,7 +33,7 @@ This also requires access to the MTA live Feed via an API: [https://datamine.mta
 
 
 
-#Program Behavior
+# Program Behavior
 
 This program obtains data from the MTA API in the form of a dictionary with nested lists and dictionaries.
 the feed contains downtown and uptown trains predicted arrival times at their respective stops. This feed corresponds to the 1,2,3,4 and 5 trains.
